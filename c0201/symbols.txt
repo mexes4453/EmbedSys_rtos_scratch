@@ -1,0 +1,4 @@
+0001001c d result
+00011020 D stack_top
+00010000 T start
+00010014 t stop

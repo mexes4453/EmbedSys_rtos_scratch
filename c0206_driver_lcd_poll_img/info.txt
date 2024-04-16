@@ -1,0 +1,122 @@
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x10000
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          978240 (bytes into file)
+  Flags:                             0x5000200, Version5 EABI, soft-float ABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         1
+  Size of section headers:           40 (bytes)
+  Number of section headers:         10
+  Section header string table index: 9
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        00010000 010000 0007bc 00  AX  0   0  4
+  [ 2] .rodata           PROGBITS        000107bc 0107bc 000069 00   A  0   0  4
+  [ 3] .data             PROGBITS        00010825 010825 0de024 00  WA  0   0  1
+  [ 4] .bss              NOBITS          000ee84c 0ee849 000024 00  WA  0   0  4
+  [ 5] .ARM.attributes   ARM_ATTRIBUTES  00000000 0ee849 00002e 00      0   0  1
+  [ 6] .comment          PROGBITS        00000000 0ee877 000033 01  MS  0   0  1
+  [ 7] .symtab           SYMTAB          00000000 0ee8ac 000330 10      8  33  4
+  [ 8] .strtab           STRTAB          00000000 0eebdc 000116 00      0   0  1
+  [ 9] .shstrtab         STRTAB          00000000 0eecf2 00004d 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), y (purecode), p (processor specific)
+
+There are no section groups in this file.
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  LOAD           0x010000 0x00010000 0x00010000 0xde849 0xde870 RWE 0x10000
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .text .rodata .data .bss 
+
+There is no dynamic section in this file.
+
+There are no relocations in this file.
+
+There are no unwind sections in this file.
+
+Symbol table '.symtab' contains 51 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00010000     0 SECTION LOCAL  DEFAULT    1 .text
+     2: 000107bc     0 SECTION LOCAL  DEFAULT    2 .rodata
+     3: 00010825     0 SECTION LOCAL  DEFAULT    3 .data
+     4: 000ee84c     0 SECTION LOCAL  DEFAULT    4 .bss
+     5: 00000000     0 SECTION LOCAL  DEFAULT    5 .ARM.attributes
+     6: 00000000     0 SECTION LOCAL  DEFAULT    6 .comment
+     7: 00000000     0 FILE    LOCAL  DEFAULT  ABS ts.o
+     8: 00010000     0 NOTYPE  LOCAL  DEFAULT    1 $a
+     9: 0001000c     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    10: 00000000     0 FILE    LOCAL  DEFAULT  ABS t.c
+    11: 000ee84c     0 NOTYPE  LOCAL  DEFAULT    4 $d
+    12: 000ee84c     4 NOTYPE  LOCAL  DEFAULT    4 fb
+    13: 00010010     0 NOTYPE  LOCAL  DEFAULT    1 $a
+    14: 000100b0     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    15: 000107bc     0 NOTYPE  LOCAL  DEFAULT    2 $d
+    16: 000100f0     0 NOTYPE  LOCAL  DEFAULT    1 $a
+    17: 000102b4     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    18: 000102bc     0 NOTYPE  LOCAL  DEFAULT    1 $a
+    19: 00010330     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    20: 00000000     0 FILE    LOCAL  DEFAULT  ABS uart.c
+    21: 000ee850     0 NOTYPE  LOCAL  DEFAULT    4 $d
+    22: 00010344     0 NOTYPE  LOCAL  DEFAULT    1 $a
+    23: 000103d0     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    24: 000103dc     0 NOTYPE  LOCAL  DEFAULT    1 $a
+    25: 00010814     0 NOTYPE  LOCAL  DEFAULT    2 $d
+    26: 00010558   216 FUNC    LOCAL  DEFAULT    1 ft_printf_nbr_base
+    27: 0001062c     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    28: 00010630     0 NOTYPE  LOCAL  DEFAULT    1 $a
+    29: 00010630    80 FUNC    LOCAL  DEFAULT    1 ft_printf_u
+    30: 000107b8     0 NOTYPE  LOCAL  DEFAULT    1 $d
+    31: 00010825     0 NOTYPE  LOCAL  DEFAULT    3 $d
+    32: 0007f837     0 NOTYPE  LOCAL  DEFAULT    3 $d
+    33: 000100f0   460 FUNC    GLOBAL DEFAULT    1 show_bmp
+    34: 00010428    92 FUNC    GLOBAL DEFAULT    1 uputc
+    35: 00010680   316 FUNC    GLOBAL DEFAULT    1 uprintf
+    36: 0006f012     0 NOTYPE  GLOBAL DEFAULT  ABS _binary_img1_bmp_size
+    37: 000103dc    76 FUNC    GLOBAL DEFAULT    1 ugetc
+    38: 00010484   124 FUNC    GLOBAL DEFAULT    1 ugets
+    39: 00010010   224 FUNC    GLOBAL DEFAULT    1 fbuf_init
+    40: 00010825     0 NOTYPE  GLOBAL DEFAULT    3 _binary_img1_bmp[...]
+    41: 00010344   152 FUNC    GLOBAL DEFAULT    1 uart_init
+    42: 0006f012     0 NOTYPE  GLOBAL DEFAULT  ABS _binary_img2_bmp_size
+    43: 000ef870     0 NOTYPE  GLOBAL DEFAULT    4 stack_top
+    44: 000102bc   136 FUNC    GLOBAL DEFAULT    1 main
+    45: 0007f837     0 NOTYPE  GLOBAL DEFAULT    3 _binary_img2_bmp[...]
+    46: 00010000     0 NOTYPE  GLOBAL DEFAULT    1 reset_start
+    47: 000ee849     0 NOTYPE  GLOBAL DEFAULT    3 _binary_img2_bmp_end
+    48: 00010500    88 FUNC    GLOBAL DEFAULT    1 uputs
+    49: 000ee850    32 OBJECT  GLOBAL DEFAULT    4 uart
+    50: 0007f837     0 NOTYPE  GLOBAL DEFAULT    3 _binary_img1_bmp_end
+
+No version information found in this file.
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "ARM926EJ-S"
+  Tag_CPU_arch: v5TEJ
+  Tag_ARM_ISA_use: Yes
+  Tag_THUMB_ISA_use: Thumb-1
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_enum_size: small

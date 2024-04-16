@@ -1,0 +1,227 @@
+PROCESSOR |  MODE          |
+ MODE     |  BITS [4:0]    |  DESCCRIPTION                                             |  USAGE
+----------+----------------+-----------------------------------------------------------+-------------------------------------
+USR       |  10000 (0x10)  |  unpriviledged User mode                                  |  For running task in user mode
+FIQ       |  10001 (0x11)  |  Fast interrupt request processing mode                   |  For fast interrupt procePssing
+IRQ       |  10010 (0x12)  |  normal interrupt request processing mode                 |  For ordinary interrupt processing
+SVC       |  10011 (0x13)  |  supervisor mode on reset or SWI (Software interrupt)     |  supervisor mode for OS kernel
+ABT       |  10111 (0x17)  |  data exception abort mode                                |  For handling prefetch or data aborts
+UND       |  11011 (0x1B)  |  undefined instruction exception mode                     |  For handling undefined instructions
+SYS       |  11111 (0x1F)  |  system mode using the same set of register as User mode  |  Privileged system mode 
+
+STATUS register CPSR
+31 | 30 | 29 | 28 | 27 | 26 25 | 24 | 23  20 | 19  16  | 15 10  | 9 | 8 | 7 | 6 | 5 | 4 - 0  |
+---+----+----+----+----+-------+----+--------+---------+--------+---+---+---+---+---+--------+
+ N |  Z | C  | V  | Q  |       |  J |  DNM   | GE[3:0] | IT[7:2]| E | A | I | F | T | M[4:0 ]|
+---------------------------------------------------------------------------------------------+
+                                       Greater than or equal to                      Mode bits                    
+                                       Java state bit                                Thumb State bit
+                                       IT [1:0]                                      FIQ disable
+                                       Sticky overflow                               IRQ disable
+                                       Overflow                                      Imprecise abort
+                                       Carry / Borrow /Extend                        disable bit
+                                       Zero                                          Data endianess bit
+                                       Negative/Less than
+
+CONDITION FLAGS AND CONDITION ON CPSR
+-------------------------------------
+bits 31:27 are the condition flag bits. They are set by comparison or TST operations or by the Use
+of instructions postfix with 'S' to set the conditional flags after executing the instruction
+Example : ADD  r0, r1, r2     ; r0 = r1 + r2
+Example : ADDS r0, r1, r2     ; r0 = r1 + r2 and set condition flags.
+
+NZCV
+----
+0000 : EQ    Equal                       (Z set) 
+0001 : NE    Not equal                   (Z clear)
+0010 : CS    Carry set                   (C set)
+0101 : VS    Overflow set                (V set)
+1000 : HI    Unsigned higher             (C set or Z clear)
+1001 : LS    Unsigned lower or same      (C clear or Z set)
+1010 : GE    Signed greater than or equal(C = V)
+1011 : LT    Signed less than            (C != V)
+1100 : GT    Signed greater than         (Z=0 and N=V)
+1101 : LE    Signed less than or equal   (Z=1 or N!=V)
+1110 : AL    Always
+
+Instruction can also be suffix with GT, LT, EQ, GE, LE, NE. such instruction will only be
+executed if condition flag bits on CPSR bits[31:27] matches the optional condition suffixed
+to the instruction.
+Example : ADDEQ r0, r1, r2     ; if zero flag is set then r0 = r1 + r2
+
+ASSEMBLY INSTRUCTIONS
+---------------------
+
+01. MRS             : (move to system coprocessor register from ARM register)
++   MRS cpsr, r1    : usage. Writes the content of r1 (arm register) into the
++                   + cpsr (system coprocessor register - current processor status register)
+-                   + This instruction is used only to change processor mode while in privilege
+-                   + mode.
+
+02. MSR             : (move from system coprocessor register to ARM register)
++   MSR r1, cpsr    : usage. Writes the content of cpsr (system coprocessor register - current processor status register)
+-                   +  into r1 (arm register)
+-                   + This instruction is used only to change processor mode while in privilege
+-                   + mode.
+
+
+03. BIC             : Bitwise clear
++   BIC r1, r0, #1F : usage. clears the first five bits in register r0 and store the result in register r1
++                   : This is similar to the expression (r1 = r0 & (~0x01F))
+
+04. AND             : Bitwise AND (&)
++   AND r1, r0,     : usage. Performs bitwise operation between r0 and r1 and store the result in register r1
++                   : This is similar to the expression (r1 = r0 & r1)
+
+05. ORR                   : Bitwise OR operation
++   ORR r1, r1, #0x12     : usage - performs 'OR' operation between the content of register r1
+-                         + and 0x012. The result is store back in register r1.
+-                         + This is similar to the expression (r1 = r1 | (0x012))
+-                         + This is similar to the expression (r1 |= (0x012))
+
+06. EOR                   : Bitwise EOR (Exclusive OR) operation
++   EOR r1, r1, #0x12     : usage - performs 'EOR' operation between the content of register r1
+-                         + and 0x012. The result is store back in register r1.
+-                         + This is similar to the expression (r1 = r1 ^ (0x012))
+-                         + This is similar to the expression (r1 ^= (0x012))
+
+
+07. BRANCHING INSTR (B)  : branch to label
++   B {<cond>} label     : usage - branch to label or to an offset relative to the curren PC 
+-                        + (address to the next instruction stored in the program counter)
++   BL {<cond>} subroutine : branch to subroutine
+-                          : it writes PC-4 into the LR (Link Register) and replaces the PC
+-                          + with the address of subroutine. Therefore causing the CPU to enter
+-                          + the subroutine.
++   BX LR                  : Return from a subroutine by copying the LR back to the PC
+-   MOV PC, LR             + alternative option.
+
+08. ARITHMETRIC INSTR
++   ADD  r0, r1, r2     ; r0 = r1 + r2
++   SUB  r0, r0, #1     ; r0 = r0 - 1
++   MUL  r0, r1, r2     ; r0 = r1 * r2
++   MLA  r0, r1, r2, r3 ; r0 = (r1 * r2) + r3
+
+
+09. COMPARISON INSTR     : These instructions set condition bits in CPSR which can be used in
+-                        + in subsequent instructions. They also do not return result
++  CMP r0, r1            : Compare -> substract r1 from r0 (r0-r1), then update condition bits in CPSR 
+-                        + based on the result and then discards the result
++  TST r0, r1            : Test -> Bitwise 'AND' between r1 and r0 (r0 & r1), then update condition bits in CPSR 
+-                        + based on the result and then discards the result
++  TEQ r0, r1            : Test Equivalence -> Bitwise 'EOR' between r1 and r0 (r0 & r1), then update condition bits in CPSR 
+-                        + based on the result and then discards the result
++  TSTEQ r2, #5          : test r2 and 5 for equal and set z bit in CPSR.
+
+
+10. DATA MOVEMENT OPERATION 
++   MOV operand1, operand2   : copy data from operand2 to operand1
+-   MOV    r0, r1            : r0 = r1 : always execute
+-   MOVS   r2, #10           : r2 = 10 and set condition bits z=0 N=0
+-   MOVNEQ r1, #0            : r1 = 0 only if z bit != 0 
+-   MOV    r0, r0, LSL #1    : shift r0 left by 1 bit (multiply r0 by 2)
+-   MOV    r0, r0, LSR #2    : shift r0 right by 2 bit (divide r0 by 4)
+-   MOV    r0, r0, ROR #4    : swap high and low 4 bits of r2
+
+
+LOAD AND STORE INSTRUCTIONS
+
+-   MOV    r0, #4096         : loads register r0 with value 4096
+-   LDR    r0, =4096         : loads register r0 with value 4096
++   LDR/STR                  : Single register data transfer for word
+-   LDRB/STRB                : single register data transfer for byte
+-   LDM/STM                  : Block data transfer
+-   SWP                      : Single data swap
+-----------------------------------------------
++   STR r0, [r1]             : store r0 to location pointed by r1.
++   LDR r2, [r1]             : load r2 from memory pointed to by r1.
++   STR r0, [r1, #12]        : pre-index addressing : STR r0 to [r1 + 12]
++   STR r0, [r1], #12        : post-index addressing : STR r0 to [r1], r1 + 12
+
+
+
+STACK INSTRUCTIONS
+
++ STMFD sp!, { r0-r12, lr }   : save all registers and return address. similar to 'push/pusha'
+- { code of subroutine }      : subroutine code in between
+- LDMFD sp!, { r0-r12, pc }   : restore saved registers and return by lr. similar to 'pop/popa'
+
+SOFTWARE interrupt
+
++ SWI         : Generates a software interrupt and changes the processor mode to SVC
+-             + and executes instructions fro vector address 0x08, causing it to execute
+-             + the SWI handler, which is usually the entry point of system calls to the OS 
+-             + kernel.
+
+
+
+HARDWARE AND SIMULATION ENVIRONMENT 
+
+sudo apt-get install gcc-arm-none-eabi
+sudo apt-get install qemu-system-arm
+BOARD : ARM Versatilepb baseboard (ARM926EJ-S 2016)
+to run the emulated ARM VersatilepbVM using the command below.
++ qemu-system-arm –M versatilepb –m 128M –kernel t.bin –serial mon:stdio
+
+info registers   :display CPU registers
+xp   /wd [address]        :display memory contents in 32-bit words
+xp   /wd 0x1001c
+
+
+
+EXCEPTIONS 
+--------------
+It is an event recognised by the processor, which diverts the processor from its normal executions 
+to handle the exception. Interrupts are also execeptions.
+
+TYPES OF EXCEPTIONS
+--------------------
+
+NAME       |  VECTOR ADDR   | DESRIPTION             | MODE     |  PRIORITY
+-----------+ ---------------+------------------------+----------+-----------
+Reset      |  0x00          | Reset                  |  SVC     |   1
+UND        |  0x04          | undefined instruction  |  UND     |   6
+SWI        |  0x08          | software interrupt     |  SVC     |   6
+PAB        |  0x0c          | prefetch abort         |  ABT     |   5
+DAB        |  0x10          | data exception abort   |  ABT     |   2
+Reserved   |  0x14          | reserved               |  -       |   -
+IRQ        |  0x18          | interrupt request      |  IRQ     |   4
+FIQ        |  0x1c          | fast interrupt request |  FIRQ    |   3
+
+EXCEPTION HANDLING
+------------------
+1. copy CPSR into SPSR for the mode in which the exception is to be handled
+2. Change CPSR mode bits to the appropriate mode, map in the banked registers
+-  and disable interrupts.
+-  IRQ is always disable
+-  FIQ is only disabled when FIQ occurs on reset.
+
+3. Set the LR_mode register to the return address.
+4. Set the program counter PC to the vector address of the exception.
+-  This forces a branch to the appropriate exception handler.
+-  Multiple execeptions which occurs simutaneously are handled using priorities.
+
+----------------------
+INTERRUPT HANDLER IN C
+----------------------
+void __attribute__((interrupt))handler()
+{
+    // actual code
+}
+
+
+
+
+---------------
+PROJECT FOLDERS
+---------------
+c0201 : First assembly program, add two numbers
+c0202 (p035/491) : Second assembly program, compute sum of an int array
+-                + It also shows how to use the stack to call a subroutine
+
+c0203 (p041/491) : Calling assembly function in C
+-                + The sum function is declared as external in C
+-                + Sum function is defined in Assembly and it uses the stack
+
+
+c0204 (p042/491) : Calling C function in assembly code.

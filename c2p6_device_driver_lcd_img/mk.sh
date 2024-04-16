@@ -21,7 +21,7 @@ arm-none-eabi-gcc -mcpu=arm926ej-s -c t.c -I./ -o t.o
 
 #arm-none-eabi-gcc -c -o t.o t.c
 #arm-none-eabi-as -o ts.o ts.s			#  assemble ${target}.s to ${target}.o
-arm-none-eabi-ld -T ${LD} img1.o ts.o t.o -o ${ELF} 	 	# link ${target}.o to ${target}.elf file
+arm-none-eabi-gcc  -nostdlib -T ${LD} -Wl,-Map=final.map -o ${ELF} *.o 	 	# link ${target}.o to ${target}.elf file
 arm-none-eabi-nm ${ELF}				# show symbols in ${target}.elf
 arm-none-eabi-objcopy -O binary ${ELF} ${BIN}   # objcopy ${target}.elf to ${target}.bin
 
